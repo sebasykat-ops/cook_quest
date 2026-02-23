@@ -42,8 +42,8 @@ export class KnexRecipeRepository implements RecipeRepository {
       difficulty: row.difficulty,
       totalMinutes: row.total_minutes,
       requiresAdult: Boolean(row.requires_adult),
-      ingredients: JSON.parse(row.ingredients ?? '[]'),
-      utensils: JSON.parse(row.utensils ?? '[]')
+      ingredients: parseStringArray(row.ingredients),
+      utensils: parseStringArray(row.utensils)
     };
 
     return Recipe.fromPrimitives(primitives);
@@ -59,9 +59,33 @@ export class KnexRecipeRepository implements RecipeRepository {
         difficulty: row.difficulty,
         totalMinutes: row.total_minutes,
         requiresAdult: Boolean(row.requires_adult),
-        ingredients: JSON.parse(row.ingredients ?? '[]'),
-        utensils: JSON.parse(row.utensils ?? '[]')
+        ingredients: parseStringArray(row.ingredients),
+        utensils: parseStringArray(row.utensils)
       })
     );
   }
+}
+
+function parseStringArray(rawValue: unknown): string[] {
+  if (!rawValue) {
+    return [];
+  }
+
+  if (Array.isArray(rawValue)) {
+    return rawValue.map((item) => String(item));
+  }
+
+  if (typeof rawValue === 'string') {
+    try {
+      const parsed = JSON.parse(rawValue);
+      if (Array.isArray(parsed)) {
+        return parsed.map((item) => String(item));
+      }
+      return [];
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
 }

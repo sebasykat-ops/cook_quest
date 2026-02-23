@@ -14,6 +14,13 @@ Each bounded context contains:
 - `application`
 - `infrastructure`
 
+HTTP endpoints are defined inside each context under:
+- `infrastructure/controllers`
+
+Dependency Injection:
+- `inversify` container in `shared-kernel/infrastructure/di`
+- composition root in `api-server.ts`
+
 ## DDD Rules (strict)
 1. Bounded contexts do not import internals from other contexts.
 2. Domain layer has no framework dependency.

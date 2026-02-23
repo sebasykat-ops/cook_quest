@@ -22,7 +22,8 @@ export class KnexMissionProgressRepository implements MissionProgressRepository 
         current_step: data.currentStep,
         total_steps: data.totalSteps,
         is_completed: data.isCompleted,
-        completed_times: data.completedTimes
+        completed_times: data.completedTimes,
+        step_completions: JSON.stringify(data.stepCompletions)
       })
       .onConflict('id')
       .merge();
@@ -41,9 +42,46 @@ export class KnexMissionProgressRepository implements MissionProgressRepository 
       currentStep: row.current_step,
       totalSteps: row.total_steps,
       isCompleted: Boolean(row.is_completed),
-      completedTimes: row.completed_times
+      completedTimes: row.completed_times,
+      stepCompletions: parseStepCompletions(row.step_completions)
     };
 
     return MissionProgress.fromPrimitives(primitives);
   }
+}
+
+function parseStepCompletions(rawValue: unknown): Array<{ stepOrder: number; completedAt: string }> {
+  if (!rawValue) {
+    return [];
+  }
+
+  const normalize = (value: unknown): Array<{ stepOrder: number; completedAt: string }> => {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .filter((item): item is { stepOrder: number; completedAt: string } => {
+        if (!item || typeof item !== 'object') {
+          return false;
+        }
+
+        const row = item as Record<string, unknown>;
+        return typeof row.stepOrder === 'number' && typeof row.completedAt === 'string';
+      })
+      .map((item) => ({
+        stepOrder: item.stepOrder,
+        completedAt: item.completedAt
+      }));
+  };
+
+  if (typeof rawValue === 'string') {
+    try {
+      return normalize(JSON.parse(rawValue));
+    } catch {
+      return [];
+    }
+  }
+
+  return normalize(rawValue);
 }

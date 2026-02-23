@@ -1,6 +1,11 @@
 import AggregateRoot from '@shared/domain/aggregate-root';
 import { MissionId } from '@mission-execution/domain/value-objects/mission-id.value-object';
 
+export interface MissionStepCompletionPrimitives {
+  stepOrder: number;
+  completedAt: string;
+}
+
 export interface MissionProgressPrimitives {
   id: string;
   recipeId: string;
@@ -8,6 +13,7 @@ export interface MissionProgressPrimitives {
   totalSteps: number;
   isCompleted: boolean;
   completedTimes: number;
+  stepCompletions: MissionStepCompletionPrimitives[];
 }
 
 export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
@@ -17,13 +23,22 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
     currentStep: number,
     totalSteps: number,
     isCompleted: boolean,
-    completedTimes = 0
+    completedTimes = 0,
+    stepCompletions: MissionStepCompletionPrimitives[] = []
   ): MissionProgress {
     if (totalSteps <= 0) {
       throw new Error('Total steps must be greater than zero');
     }
 
-    return new MissionProgress(id, recipeId, currentStep, totalSteps, isCompleted, completedTimes);
+    return new MissionProgress(
+      id,
+      recipeId,
+      currentStep,
+      totalSteps,
+      isCompleted,
+      completedTimes,
+      stepCompletions
+    );
   }
 
   public static fromPrimitives(primitives: MissionProgressPrimitives): MissionProgress {
@@ -33,7 +48,8 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
       primitives.currentStep,
       primitives.totalSteps,
       primitives.isCompleted,
-      primitives.completedTimes
+      primitives.completedTimes,
+      primitives.stepCompletions
     );
   }
 
@@ -43,6 +59,7 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
   #totalSteps: number;
   #isCompleted: boolean;
   #completedTimes: number;
+  #stepCompletions: MissionStepCompletionPrimitives[];
 
   private constructor(
     id: MissionId,
@@ -50,7 +67,8 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
     currentStep: number,
     totalSteps: number,
     isCompleted: boolean,
-    completedTimes: number
+    completedTimes: number,
+    stepCompletions: MissionStepCompletionPrimitives[]
   ) {
     super();
     this.#id = id;
@@ -59,14 +77,26 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
     this.#totalSteps = totalSteps;
     this.#isCompleted = isCompleted;
     this.#completedTimes = completedTimes;
+    this.#stepCompletions = stepCompletions;
   }
 
   public advanceStep(): void {
-    if (this.#currentStep < this.#totalSteps) {
-      this.#currentStep += 1;
+    if (this.#isCompleted) {
+      return;
     }
 
-    if (this.#currentStep >= this.#totalSteps && !this.#isCompleted) {
+    const stepOrder = this.#currentStep;
+
+    if (!this.#stepCompletions.some((item) => item.stepOrder === stepOrder)) {
+      this.#stepCompletions.push({
+        stepOrder,
+        completedAt: new Date().toISOString()
+      });
+    }
+
+    if (this.#currentStep < this.#totalSteps) {
+      this.#currentStep += 1;
+    } else {
       this.#isCompleted = true;
       this.#completedTimes += 1;
     }
@@ -75,6 +105,7 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
   public restart(): void {
     this.#currentStep = 1;
     this.#isCompleted = false;
+    this.#stepCompletions = [];
   }
 
   public get id(): MissionId {
@@ -101,6 +132,10 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
     return this.#completedTimes;
   }
 
+  public get stepCompletions(): MissionStepCompletionPrimitives[] {
+    return this.#stepCompletions;
+  }
+
   public override toPrimitives(): MissionProgressPrimitives {
     return {
       id: this.#id.value,
@@ -108,7 +143,8 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
       currentStep: this.#currentStep,
       totalSteps: this.#totalSteps,
       isCompleted: this.#isCompleted,
-      completedTimes: this.#completedTimes
+      completedTimes: this.#completedTimes,
+      stepCompletions: this.#stepCompletions
     };
   }
 }

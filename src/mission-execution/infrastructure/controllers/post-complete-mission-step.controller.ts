@@ -32,6 +32,7 @@ export class PostCompleteMissionStepController {
           totalSteps: missionProgress.totalSteps,
           isCompleted: missionProgress.isCompleted,
           completedTimes: missionProgress.completedTimes,
+          stepCompletions: missionProgress.stepCompletions,
           missionCode: buildMissionCode(missionProgress.id, missionProgress.recipeId)
         })
       );

@@ -1,16 +1,24 @@
 import 'reflect-metadata';
 
 import { createMainContainer } from '@shared/infrastructure/container/container';
+import sharedKernelContainerTypes from '@shared/infrastructure/container/shared-kernel.container.types';
+import { ensureDatabaseSchema } from '@shared/infrastructure/database/ensure-database-schema';
 import { createHttpApp } from '@shared/infrastructure/http/create-http-app';
 import { seedData } from '@shared/infrastructure/seed-data';
+import { Knex } from 'knex';
 
 const port = Number(process.env.PORT ?? 3000);
 
 try {
   const container = createMainContainer();
   const app = createHttpApp(container);
+  const useInMemory = process.env.USE_IN_MEMORY === 'true';
+  const setupPromise = useInMemory
+    ? Promise.resolve()
+    : ensureDatabaseSchema(container.get<Knex>(sharedKernelContainerTypes.knexClient));
 
-  seedData(container)
+  setupPromise
+    .then(() => seedData(container))
     .then(() => {
       app.listen(port, () => {
         console.log(`CookQuest API running on port ${port}`);

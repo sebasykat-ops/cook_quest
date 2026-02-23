@@ -1,21 +1,25 @@
 import { Container } from 'inversify';
 import { CreateRecipeUseCase } from '@recipe-catalog/application/use-cases/create-recipe.use-case';
 import { RecipeStep } from '@recipe-catalog/domain/entities/recipe-step.entity';
-import { InMemoryRecipeStepRepository } from '@recipe-catalog/infrastructure/repositories/in-memory-recipe-step.repository';
+import { RecipeStepRepository } from '@recipe-catalog/domain/repositories/recipe-step.repository';
 import { MissionProgress } from '@mission-execution/domain/entities/mission-progress.entity';
+import { MissionProgressRepository } from '@mission-execution/domain/repositories/mission-progress.repository';
 import { MissionId } from '@mission-execution/domain/value-objects/mission-id.value-object';
-import { InMemoryMissionProgressRepository } from '@mission-execution/infrastructure/repositories/in-memory-mission-progress.repository';
 import recipeCatalogContainerTypes from '@recipe-catalog/infrastructure/container/recipe-catalog.container.types';
 import missionExecutionContainerTypes from '@mission-execution/infrastructure/container/mission-execution.container.types';
 
 export async function seedData(container: Container): Promise<void> {
   const createRecipeUseCase = container.get<CreateRecipeUseCase>(recipeCatalogContainerTypes.createRecipeUseCase);
-  const missionProgressRepository = container.get<InMemoryMissionProgressRepository>(
+  const missionProgressRepository = container.get<MissionProgressRepository>(
     missionExecutionContainerTypes.missionProgressRepository
   );
-  const recipeStepRepository = container.get<InMemoryRecipeStepRepository>(
-    recipeCatalogContainerTypes.recipeStepRepository
-  );
+  const recipeStepRepository = container.get<RecipeStepRepository>(recipeCatalogContainerTypes.recipeStepRepository);
+
+  const existingMission = await missionProgressRepository.findById('mission-1');
+
+  if (existingMission) {
+    return;
+  }
 
   await createRecipeUseCase.execute({
     id: 'recipe-1',
@@ -78,7 +82,5 @@ export async function seedData(container: Container): Promise<void> {
     )
   ]);
 
-  await missionProgressRepository.save(
-    MissionProgress.create(MissionId.create('mission-1'), 'recipe-1', 1, 5, false)
-  );
+  await missionProgressRepository.save(MissionProgress.create(MissionId.create('mission-1'), 'recipe-1', 1, 5, false, 0));
 }

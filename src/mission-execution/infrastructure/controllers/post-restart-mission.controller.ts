@@ -31,7 +31,8 @@ export class PostRestartMissionController {
           currentStep: missionProgress.currentStep,
           totalSteps: missionProgress.totalSteps,
           isCompleted: missionProgress.isCompleted,
-          completedTimes: missionProgress.completedTimes
+          completedTimes: missionProgress.completedTimes,
+          missionCode: buildMissionCode(missionProgress.id, missionProgress.recipeId)
         })
       );
     } catch (error) {
@@ -42,4 +43,11 @@ export class PostRestartMissionController {
       next(error);
     }
   }
+}
+
+
+function buildMissionCode(missionId: string, recipeId: string): string {
+  const missionSegment = missionId.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 4) || 'MISS';
+  const recipeSegment = recipeId.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 4) || 'RECP';
+  return `CQ-${recipeSegment}-${missionSegment}`;
 }

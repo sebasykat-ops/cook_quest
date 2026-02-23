@@ -1,5 +1,5 @@
 const sharedKernelContainerTypes = {
-  // reserved for future shared services/middlewares
+  knexClient: Symbol.for('Shared.KnexClient')
 };
 
 export default sharedKernelContainerTypes;

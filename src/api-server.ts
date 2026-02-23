@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { createMainContainer } from '@shared/infrastructure/container/container';
 import sharedKernelContainerTypes from '@shared/infrastructure/container/shared-kernel.container.types';
-import { ensureDatabaseSchema } from '@shared/infrastructure/database/ensure-database-schema';
+import { runMigrationsUp } from '@shared/infrastructure/database/run-migrations-up';
 import { createHttpApp } from '@shared/infrastructure/http/create-http-app';
 import { seedData } from '@shared/infrastructure/seed-data';
 import { Knex } from 'knex';
@@ -15,7 +15,7 @@ try {
   const useInMemory = process.env.USE_IN_MEMORY === 'true';
   const setupPromise = useInMemory
     ? Promise.resolve()
-    : ensureDatabaseSchema(container.get<Knex>(sharedKernelContainerTypes.knexClient));
+    : runMigrationsUp(container.get<Knex>(sharedKernelContainerTypes.knexClient));
 
   setupPromise
     .then(() => seedData(container))

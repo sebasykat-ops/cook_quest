@@ -4,20 +4,18 @@ import { Knex } from 'knex';
 import { createMainContainer } from '@shared/infrastructure/container/container';
 import sharedKernelContainerTypes from '@shared/infrastructure/container/shared-kernel.container.types';
 import { runMigrationsUp } from '@shared/infrastructure/database/run-migrations-up';
-import { resetAndSeedData } from '@shared/infrastructure/seed-data';
 
 async function run(): Promise<void> {
   const container = createMainContainer();
   const knexClient = container.get<Knex>(sharedKernelContainerTypes.knexClient);
 
   await runMigrationsUp(knexClient);
-  await resetAndSeedData(container);
+  console.log('✅ migration:up completed (all pending migrations executed).');
 
-  console.log('✅ Seed completed: database reset and populated with 5 recipes.');
   await knexClient.destroy();
 }
 
 run().catch((error) => {
-  console.error('❌ Seed failed', error);
+  console.error('❌ migration:up failed', error);
   process.exit(1);
 });

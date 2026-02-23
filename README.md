@@ -85,6 +85,12 @@ Error:
 - Global error middleware with domain-aware `AppError`
 - 404 route middleware
 
+## Migrations (MySQL)
+Ejecuta todas las migraciones pendientes:
+```bash
+npm run migration:up
+```
+
 ## Seed (MySQL)
 Resetea y puebla completamente la BD con 5 recetas:
 ```bash

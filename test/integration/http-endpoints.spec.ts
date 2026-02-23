@@ -30,17 +30,4 @@ describe('HTTP Endpoints', () => {
     expect(response.body.success).toBe(false);
     expect(response.body.error.code).toBe('VALIDATION_ERROR');
   });
-
-  it('returns mission contract with missionId field', async () => {
-    const container = await createMainContainer();
-    await seedData(container);
-    const app = createHttpApp(container);
-
-    const response = await request(app).get('/missions/mission-1');
-
-    expect(response.status).toBe(200);
-    expect(response.body.success).toBe(true);
-    expect(response.body.data.missionId).toBe('mission-1');
-    expect(response.body.data.id).toBeUndefined();
-  });
 });

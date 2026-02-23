@@ -20,15 +20,7 @@ export class GetMissionByIdController {
     try {
       const parsedParams = getMissionByIdSchema.parse(request.params);
       const missionProgress = await this.getMissionByIdUseCase.execute({ missionId: parsedParams.missionId });
-
-      return response.json(
-        successResponse({
-          missionId: missionProgress.id,
-          recipeId: missionProgress.recipeId,
-          currentStep: missionProgress.currentStep,
-          isCompleted: missionProgress.isCompleted
-        })
-      );
+      return response.json(successResponse(missionProgress));
     } catch (error) {
       if (error instanceof z.ZodError) {
         return next(new ValidationError('Invalid mission id', error.flatten()));

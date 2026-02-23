@@ -1,0 +1,17 @@
+{
+  "name": "cook-quest",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CookQuest DDD foundation",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js",
+    "dev": "tsx src/main.ts",
+    "lint": "echo 'lint placeholder'"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

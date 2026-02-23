@@ -1,0 +1,29 @@
+# CookQuest
+
+DDD-first foundation for CookQuest.
+
+## Architecture
+- `recipe-catalog` bounded context
+- `mission-execution` bounded context
+- `safety-guidance` bounded context
+- `user-progress` bounded context
+- `shared-kernel` minimal abstractions only
+
+Each bounded context contains:
+- `domain`
+- `application`
+- `infrastructure`
+
+## DDD Rules (strict)
+1. Bounded contexts do not import internals from other contexts.
+2. Domain layer has no framework dependency.
+3. Communication between contexts must happen via contracts/application layer orchestration.
+4. Classes use `UpperCase` naming.
+5. Variables and methods use `lowerCase` naming.
+6. Files use suffix-based convention like `create-recipe.use-case.ts`, `recipe.repository.ts`, `recipe.entity.ts`.
+
+## Run
+```bash
+npm install
+npm run dev
+```

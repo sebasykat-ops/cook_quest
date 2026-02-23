@@ -1,4 +1,4 @@
-import { Recipe } from '../entities/recipe.entity';
+import { Recipe } from '@recipe-catalog/domain/entities/recipe.entity';
 
 export interface RecipeRepository {
   save(recipe: Recipe): Promise<void>;

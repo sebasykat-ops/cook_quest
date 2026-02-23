@@ -1,7 +1,7 @@
-import { UseCase } from '../../../shared-kernel/application/use-case';
-import { Rating } from '../../domain/value-objects/rating.value-object';
-import { UserRecipeProgressRepository } from '../../domain/repositories/user-recipe-progress.repository';
-import { RateRecipeDto } from '../dto/rate-recipe.dto';
+import { UseCase } from '@shared/application/use-case';
+import { Rating } from '@user-progress/domain/value-objects/rating.value-object';
+import { UserRecipeProgressRepository } from '@user-progress/domain/repositories/user-recipe-progress.repository';
+import { RateRecipeDto } from '@user-progress/application/dto/rate-recipe.dto';
 
 export class RateRecipeUseCase implements UseCase<RateRecipeDto, void> {
   constructor(private readonly userRecipeProgressRepository: UserRecipeProgressRepository) {}

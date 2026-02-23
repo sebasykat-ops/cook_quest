@@ -1,6 +1,6 @@
-import { UseCase } from '../../../shared-kernel/application/use-case';
-import { SafetyRuleRepository } from '../../domain/repositories/safety-rule.repository';
-import { EvaluateSafetyStepDto } from '../dto/evaluate-safety-step.dto';
+import { UseCase } from '@shared/application/use-case';
+import { SafetyRuleRepository } from '@safety-guidance/domain/repositories/safety-rule.repository';
+import { EvaluateSafetyStepDto } from '@safety-guidance/application/dto/evaluate-safety-step.dto';
 
 export interface EvaluateSafetyStepResponse {
   shouldShowAdultWarning: boolean;

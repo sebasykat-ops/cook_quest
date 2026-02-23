@@ -1,4 +1,4 @@
-import { SafetyRule } from '../entities/safety-rule.entity';
+import { SafetyRule } from '@safety-guidance/domain/entities/safety-rule.entity';
 
 export interface SafetyRuleRepository {
   save(safetyRule: SafetyRule): Promise<void>;

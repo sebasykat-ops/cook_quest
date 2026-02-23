@@ -4,7 +4,7 @@ import recipeCatalogContainerTypes from '@recipe-catalog/infrastructure/containe
 import { Recipe } from '@recipe-catalog/domain/entities/recipe.entity';
 import { RecipeRepository } from '@recipe-catalog/domain/repositories/recipe.repository';
 import { RecipeId } from '@recipe-catalog/domain/value-objects/recipe-id.value-object';
-import { CreateRecipeDto } from '../dto/create-recipe.dto';
+import { CreateRecipeDto } from '@recipe-catalog/application/dto/create-recipe.dto';
 
 @injectable()
 export class CreateRecipeUseCase implements UseCase<CreateRecipeDto, void> {

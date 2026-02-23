@@ -1,4 +1,4 @@
-import { ValueObject } from '../../../shared-kernel/domain/value-object';
+import { ValueObject } from '@shared/domain/value-object';
 
 interface MissionIdProps {
   value: string;

@@ -4,9 +4,8 @@ import { controller, httpPost } from 'inversify-express-utils';
 import { z } from 'zod';
 import missionExecutionContainerTypes from '@mission-execution/infrastructure/container/mission-execution.container.types';
 import { AdvanceMissionStepUseCase } from '@mission-execution/application/use-cases/advance-mission-step.use-case';
-import { MissionProgressRepository } from '@mission-execution/domain/repositories/mission-progress.repository';
+import { GetMissionByIdUseCase } from '@mission-execution/application/use-cases/get-mission-by-id.use-case';
 import postAdvanceMissionStepSchema from '@mission-execution/infrastructure/schema/post-advance-mission-step.schema';
-import { NotFoundError } from '@shared/domain/errors/not-found-error';
 import { ValidationError } from '@shared/domain/errors/validation-error';
 import { successResponse } from '@shared/infrastructure/http/api-response';
 
@@ -15,8 +14,8 @@ export class PostAdvanceMissionStepController {
   constructor(
     @inject(missionExecutionContainerTypes.advanceMissionStepUseCase)
     private readonly advanceMissionStepUseCase: AdvanceMissionStepUseCase,
-    @inject(missionExecutionContainerTypes.missionProgressRepository)
-    private readonly missionProgressRepository: MissionProgressRepository
+    @inject(missionExecutionContainerTypes.getMissionByIdUseCase)
+    private readonly getMissionByIdUseCase: GetMissionByIdUseCase
   ) {}
 
   @httpPost('')
@@ -24,15 +23,11 @@ export class PostAdvanceMissionStepController {
     try {
       const parsedParams = postAdvanceMissionStepSchema.parse(request.params);
       await this.advanceMissionStepUseCase.execute({ missionId: parsedParams.missionId });
-      const missionProgress = await this.missionProgressRepository.findById(parsedParams.missionId);
-
-      if (!missionProgress) {
-        throw new NotFoundError('Mission not found');
-      }
+      const missionProgress = await this.getMissionByIdUseCase.execute({ missionId: parsedParams.missionId });
 
       return response.json(
         successResponse({
-          missionId: missionProgress.id.value,
+          missionId: missionProgress.id,
           currentStep: missionProgress.currentStep,
           isCompleted: missionProgress.isCompleted
         })

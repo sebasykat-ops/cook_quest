@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
-import { MissionProgress } from '../../domain/entities/mission-progress.entity';
-import { MissionProgressRepository } from '../../domain/repositories/mission-progress.repository';
+import { MissionProgress } from '@mission-execution/domain/entities/mission-progress.entity';
+import { MissionProgressRepository } from '@mission-execution/domain/repositories/mission-progress.repository';
 
 @injectable()
 export class InMemoryMissionProgressRepository implements MissionProgressRepository {

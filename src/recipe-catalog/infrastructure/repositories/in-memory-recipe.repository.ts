@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
-import { Recipe } from '../../domain/entities/recipe.entity';
-import { RecipeRepository } from '../../domain/repositories/recipe.repository';
+import { Recipe } from '@recipe-catalog/domain/entities/recipe.entity';
+import { RecipeRepository } from '@recipe-catalog/domain/repositories/recipe.repository';
 
 @injectable()
 export class InMemoryRecipeRepository implements RecipeRepository {

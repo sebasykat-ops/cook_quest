@@ -1,5 +1,5 @@
-import { UserRecipeProgress } from '../../domain/entities/user-recipe-progress.entity';
-import { UserRecipeProgressRepository } from '../../domain/repositories/user-recipe-progress.repository';
+import { UserRecipeProgress } from '@user-progress/domain/entities/user-recipe-progress.entity';
+import { UserRecipeProgressRepository } from '@user-progress/domain/repositories/user-recipe-progress.repository';
 
 export class InMemoryUserRecipeProgressRepository implements UserRecipeProgressRepository {
   private readonly progressMap = new Map<string, UserRecipeProgress>();

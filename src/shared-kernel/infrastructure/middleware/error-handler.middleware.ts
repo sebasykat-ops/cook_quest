@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { AppError } from '../../domain/errors/app-error';
-import { errorResponse } from '../http/api-response';
+import { AppError } from '@shared/domain/errors/app-error';
+import { errorResponse } from '@shared/infrastructure/http/api-response';
 
 export function errorHandlerMiddleware(
   error: Error,

@@ -8,7 +8,8 @@
     "start": "node dist/main.js",
     "dev": "tsx src/main.ts",
     "lint": "echo 'lint placeholder'",
-    "test": "vitest run"
+    "test": "vitest run",
+    "seed": "tsx src/scripts/seed.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

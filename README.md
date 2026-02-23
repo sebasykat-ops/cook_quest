@@ -62,9 +62,12 @@ npm run dev
 ## API Endpoints (v0)
 - `GET /health`
 - `GET /recipes`
+- `GET /recipes/:recipeId/steps`
 - `POST /recipes`
 - `GET /missions/:missionId`
 - `POST /missions/:missionId/advance-step`
+- `POST /missions/:missionId/complete-step`
+- `POST /missions/:missionId/restart`
 
 ## Response Contract
 Success:
@@ -82,9 +85,24 @@ Error:
 - Global error middleware with domain-aware `AppError`
 - 404 route middleware
 
+## Seed (MySQL)
+Resetea y puebla completamente la BD con 5 recetas:
+```bash
+npm run seed
+```
+
+Variables de entorno recomendadas:
+- `MYSQL_HOST`
+- `MYSQL_PORT`
+- `MYSQL_USER`
+- `MYSQL_PASSWORD`
+- `MYSQL_DB`
+- `MYSQL_RECIPE_SCHEMA` (default `cookquest_recipe_catalog`)
+- `MYSQL_MISSION_SCHEMA` (default `cookquest_mission_execution`)
+
 ## Tests
 ```bash
-npm test
+USE_IN_MEMORY=true npm test
 ```
 
 Example:

@@ -27,3 +27,15 @@ Each bounded context contains:
 npm install
 npm run dev
 ```
+
+## API Endpoints (v0)
+- `GET /health`
+- `GET /recipes`
+- `POST /recipes`
+- `GET /missions/:missionId`
+- `POST /missions/:missionId/advance-step`
+
+Example:
+```bash
+curl http://localhost:3000/recipes
+```

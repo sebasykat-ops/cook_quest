@@ -48,6 +48,27 @@ npm run dev
 - `GET /missions/:missionId`
 - `POST /missions/:missionId/advance-step`
 
+## Response Contract
+Success:
+```json
+{ "success": true, "data": {} }
+```
+
+Error:
+```json
+{ "success": false, "error": { "code": "VALIDATION_ERROR", "message": "...", "details": {} } }
+```
+
+## Validation and Error Handling
+- DTO validation with `zod`
+- Global error middleware with domain-aware `AppError`
+- 404 route middleware
+
+## Tests
+```bash
+npm test
+```
+
 Example:
 ```bash
 curl http://localhost:3000/recipes

@@ -3,6 +3,7 @@ import { UseCase } from '../../../shared-kernel/application/use-case';
 import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
 import { MissionProgressRepository } from '../../domain/repositories/mission-progress.repository';
 import { AdvanceMissionStepDto } from '../dto/advance-mission-step.dto';
+import { NotFoundError } from '../../../shared-kernel/domain/errors/not-found-error';
 
 @injectable()
 export class AdvanceMissionStepUseCase implements UseCase<AdvanceMissionStepDto, void> {
@@ -15,7 +16,7 @@ export class AdvanceMissionStepUseCase implements UseCase<AdvanceMissionStepDto,
     const missionProgress = await this.missionProgressRepository.findById(request.missionId);
 
     if (!missionProgress) {
-      throw new Error('Mission progress not found');
+      throw new NotFoundError('Mission progress not found');
     }
 
     missionProgress.advanceStep();

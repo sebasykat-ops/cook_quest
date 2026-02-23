@@ -1,8 +1,11 @@
-import { Express, Request, Response } from 'express';
+import { Express } from 'express';
 import { inject, injectable } from 'inversify';
 import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
 import { AdvanceMissionStepUseCase } from '../../application/use-cases/advance-mission-step.use-case';
 import { MissionProgressRepository } from '../../domain/repositories/mission-progress.repository';
+import { asyncHandler } from '../../../shared-kernel/infrastructure/http/async-handler';
+import { successResponse } from '../../../shared-kernel/infrastructure/http/api-response';
+import { NotFoundError } from '../../../shared-kernel/domain/errors/not-found-error';
 
 @injectable()
 export class PostAdvanceMissionStepController {
@@ -14,23 +17,25 @@ export class PostAdvanceMissionStepController {
   ) {}
 
   public register(app: Express): void {
-    app.post('/missions/:missionId/advance-step', async (request: Request, response: Response) => {
-      try {
+    app.post(
+      '/missions/:missionId/advance-step',
+      asyncHandler(async (request, response) => {
         const missionId = String(request.params.missionId);
         await this.advanceMissionStepUseCase.execute({ missionId });
         const missionProgress = await this.missionProgressRepository.findById(missionId);
 
-        response.json({
-          message: 'Mission step advanced',
-          data: {
-            missionId: missionProgress?.id.value,
-            currentStep: missionProgress?.currentStep,
-            isCompleted: missionProgress?.isCompleted
-          }
-        });
-      } catch (error) {
-        response.status(400).json({ message: (error as Error).message });
-      }
-    });
+        if (!missionProgress) {
+          throw new NotFoundError('Mission not found');
+        }
+
+        response.json(
+          successResponse({
+            missionId: missionProgress.id.value,
+            currentStep: missionProgress.currentStep,
+            isCompleted: missionProgress.isCompleted
+          })
+        );
+      })
+    );
   }
 }

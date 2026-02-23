@@ -1,7 +1,9 @@
-import { Express, Request, Response } from 'express';
+import { Express } from 'express';
 import { inject, injectable } from 'inversify';
 import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
 import { RecipeRepository } from '../../domain/repositories/recipe.repository';
+import { asyncHandler } from '../../../shared-kernel/infrastructure/http/async-handler';
+import { successResponse } from '../../../shared-kernel/infrastructure/http/api-response';
 
 @injectable()
 export class GetRecipesController {
@@ -11,18 +13,23 @@ export class GetRecipesController {
   ) {}
 
   public register(app: Express): void {
-    app.get('/recipes', async (_request: Request, response: Response) => {
-      const recipes = await this.recipeRepository.findAll();
+    app.get(
+      '/recipes',
+      asyncHandler(async (_request, response) => {
+        const recipes = await this.recipeRepository.findAll();
 
-      response.json({
-        data: recipes.map((recipe) => ({
-          id: recipe.id.value,
-          title: recipe.title,
-          difficulty: recipe.difficulty,
-          totalMinutes: recipe.totalMinutes,
-          requiresAdult: recipe.requiresAdult
-        }))
-      });
-    });
+        response.json(
+          successResponse(
+            recipes.map((recipe) => ({
+              id: recipe.id.value,
+              title: recipe.title,
+              difficulty: recipe.difficulty,
+              totalMinutes: recipe.totalMinutes,
+              requiresAdult: recipe.requiresAdult
+            }))
+          )
+        );
+      })
+    );
   }
 }

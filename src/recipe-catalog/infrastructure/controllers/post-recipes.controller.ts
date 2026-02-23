@@ -1,32 +1,33 @@
-import { Express } from 'express';
-import { inject, injectable } from 'inversify';
+import { Request, Response, NextFunction } from 'express';
+import { inject } from 'inversify';
+import { controller, httpPost } from 'inversify-express-utils';
+import { z } from 'zod';
 import { CreateRecipeUseCase } from '../../application/use-cases/create-recipe.use-case';
 import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
-import { asyncHandler } from '../../../shared-kernel/infrastructure/http/async-handler';
 import { successResponse } from '../../../shared-kernel/infrastructure/http/api-response';
 import { ValidationError } from '../../../shared-kernel/domain/errors/validation-error';
 import { createRecipeRequestSchema } from '../http/create-recipe.request-schema';
 
-@injectable()
+@controller('/recipes')
 export class PostRecipesController {
   constructor(
     @inject(tokens.recipeCatalog.createRecipeUseCase)
     private readonly createRecipeUseCase: CreateRecipeUseCase
   ) {}
 
-  public register(app: Express): void {
-    app.post(
-      '/recipes',
-      asyncHandler(async (request, response) => {
-        const parsedRequest = createRecipeRequestSchema.safeParse(request.body);
+  @httpPost('')
+  public async run(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const parsedRequest = createRecipeRequestSchema.parse(request.body);
 
-        if (!parsedRequest.success) {
-          throw new ValidationError('Invalid recipe payload', parsedRequest.error.flatten());
-        }
+      await this.createRecipeUseCase.execute(parsedRequest);
+      return response.status(201).json(successResponse({ message: 'Recipe created' }));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return next(new ValidationError('Invalid recipe payload', error.flatten()));
+      }
 
-        await this.createRecipeUseCase.execute(parsedRequest.data);
-        response.status(201).json(successResponse({ message: 'Recipe created' }));
-      })
-    );
+      next(error);
+    }
   }
 }

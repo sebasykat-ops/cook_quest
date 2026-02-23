@@ -1,7 +1,6 @@
 import { ContainerModule } from 'inversify';
-import { GetHealthController } from '../controllers/get-health.controller';
-import { tokens } from './tokens';
+import '../controllers';
 
-export const sharedKernelContainer = new ContainerModule(({ bind }) => {
-  bind(tokens.sharedKernel.getHealthController).to(GetHealthController).inSingletonScope();
+export const sharedKernelContainer = new ContainerModule(() => {
+  // Shared kernel bindings can be added here.
 });

@@ -1,12 +1,11 @@
-import { Express } from 'express';
-import { injectable } from 'inversify';
+import { Request, Response } from 'express';
+import { controller, httpGet } from 'inversify-express-utils';
 import { successResponse } from '../http/api-response';
 
-@injectable()
+@controller('/health')
 export class GetHealthController {
-  public register(app: Express): void {
-    app.get('/health', (_request, response) => {
-      response.json(successResponse({ status: 'ok' }));
-    });
+  @httpGet('')
+  public async run(_request: Request, response: Response): Promise<Response> {
+    return response.json(successResponse({ status: 'ok' }));
   }
 }

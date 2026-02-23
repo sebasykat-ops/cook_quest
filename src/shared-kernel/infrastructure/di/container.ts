@@ -3,12 +3,10 @@ import { missionExecutionContainer } from '../../../mission-execution/infrastruc
 import { recipeCatalogContainer } from '../../../recipe-catalog/infrastructure/di/recipe-catalog.container';
 import { sharedKernelContainer } from './shared-kernel.container';
 
-export async function createMainContainer(): Promise<Container> {
+export function createMainContainer(): Container {
   const mainContainer = new Container();
 
-  await mainContainer.load(sharedKernelContainer);
-  await mainContainer.load(recipeCatalogContainer);
-  await mainContainer.load(missionExecutionContainer);
+  mainContainer.load(sharedKernelContainer, recipeCatalogContainer, missionExecutionContainer);
 
   return mainContainer;
 }

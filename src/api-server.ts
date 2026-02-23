@@ -6,16 +6,21 @@ import { seedData } from './shared-kernel/infrastructure/seed-data';
 
 const port = Number(process.env.PORT ?? 3000);
 
-createMainContainer()
-  .then(async (container) => {
-    const app = createHttpApp(container);
-    await seedData(container);
+try {
+  const container = createMainContainer();
+  const app = createHttpApp(container);
 
-    app.listen(port, () => {
-      console.log(`CookQuest API running on port ${port}`);
+  seedData(container)
+    .then(() => {
+      app.listen(port, () => {
+        console.log(`CookQuest API running on port ${port}`);
+      });
+    })
+    .catch((error) => {
+      console.error('API bootstrap failed', error);
+      process.exit(1);
     });
-  })
-  .catch((error) => {
-    console.error('API bootstrap failed', error);
-    process.exit(1);
-  });
+} catch (error) {
+  console.error('API bootstrap failed', error);
+  process.exit(1);
+}

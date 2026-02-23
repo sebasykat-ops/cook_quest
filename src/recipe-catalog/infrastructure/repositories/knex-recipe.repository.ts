@@ -21,7 +21,9 @@ export class KnexRecipeRepository implements RecipeRepository {
         title: data.title,
         difficulty: data.difficulty,
         total_minutes: data.totalMinutes,
-        requires_adult: data.requiresAdult
+        requires_adult: data.requiresAdult,
+        ingredients: JSON.stringify(data.ingredients),
+        utensils: JSON.stringify(data.utensils)
       })
       .onConflict('id')
       .merge();
@@ -39,7 +41,9 @@ export class KnexRecipeRepository implements RecipeRepository {
       title: row.title,
       difficulty: row.difficulty,
       totalMinutes: row.total_minutes,
-      requiresAdult: Boolean(row.requires_adult)
+      requiresAdult: Boolean(row.requires_adult),
+      ingredients: JSON.parse(row.ingredients ?? '[]'),
+      utensils: JSON.parse(row.utensils ?? '[]')
     };
 
     return Recipe.fromPrimitives(primitives);
@@ -54,7 +58,9 @@ export class KnexRecipeRepository implements RecipeRepository {
         title: row.title,
         difficulty: row.difficulty,
         totalMinutes: row.total_minutes,
-        requiresAdult: Boolean(row.requires_adult)
+        requiresAdult: Boolean(row.requires_adult),
+        ingredients: JSON.parse(row.ingredients ?? '[]'),
+        utensils: JSON.parse(row.utensils ?? '[]')
       })
     );
   }

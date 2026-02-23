@@ -4,4 +4,6 @@ export interface CreateRecipeDto {
   difficulty: 'easy' | 'medium' | 'hard';
   totalMinutes: number;
   requiresAdult: boolean;
+  ingredients: string[];
+  utensils: string[];
 }

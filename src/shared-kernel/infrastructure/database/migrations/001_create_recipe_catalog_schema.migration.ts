@@ -14,7 +14,9 @@ export const createRecipeCatalogSchemaMigration: Migration = {
         title VARCHAR(255) NOT NULL,
         difficulty VARCHAR(32) NOT NULL,
         total_minutes INT NOT NULL,
-        requires_adult BOOLEAN NOT NULL
+        requires_adult BOOLEAN NOT NULL,
+        ingredients JSON NULL,
+        utensils JSON NULL
       )
     `);
 

@@ -14,7 +14,9 @@ describe('CreateRecipeUseCase', () => {
       title: 'Panqueques',
       difficulty: 'easy',
       totalMinutes: 10,
-      requiresAdult: false
+      requiresAdult: false,
+      ingredients: ['Harina', 'Leche', 'Huevo'],
+      utensils: ['Bowl', 'Batidor']
     });
 
     const recipes = await recipeRepository.findAll();

@@ -19,7 +19,9 @@ export class CreateRecipeUseCase implements UseCase<CreateRecipeDto, void> {
       request.title,
       request.difficulty,
       request.totalMinutes,
-      request.requiresAdult
+      request.requiresAdult,
+      request.ingredients,
+      request.utensils
     );
 
     await this.recipeRepository.save(recipe);

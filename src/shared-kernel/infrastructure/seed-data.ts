@@ -19,6 +19,8 @@ interface SeedRecipe {
   difficulty: 'easy' | 'medium' | 'hard';
   totalMinutes: number;
   requiresAdult: boolean;
+  ingredients: string[];
+  utensils: string[];
   steps: Array<{
     id: string;
     order: number;
@@ -37,6 +39,8 @@ const seedRecipes: SeedRecipe[] = [
     difficulty: 'easy',
     totalMinutes: 20,
     requiresAdult: false,
+    ingredients: ['Cacao en polvo','Azúcar','Leche','Mantequilla'],
+    utensils: ['Bowl grande','Cuchara','Taza apta microondas'],
     steps: [
       { id: 'step-1-1', order: 1, instruction: 'Lava tus manos y prepara un bowl grande.', tip: 'La higiene es el primer paso.', requiresAdult: false, hazard: 'none' },
       { id: 'step-1-2', order: 2, instruction: 'Mezcla cacao y azúcar.', tip: 'Evita grumos.', timerSeconds: 60, requiresAdult: false, hazard: 'none' },
@@ -51,6 +55,8 @@ const seedRecipes: SeedRecipe[] = [
     difficulty: 'easy',
     totalMinutes: 10,
     requiresAdult: false,
+    ingredients: ['Pan de molde','Palta','Tomate','Queso'],
+    utensils: ['Plato','Tenedor','Cuchillo sin punta'],
     steps: [
       { id: 'step-2-1', order: 1, instruction: 'Ordena pan, palta, tomate y queso.', requiresAdult: false, hazard: 'none' },
       { id: 'step-2-2', order: 2, instruction: 'Muele la palta con un tenedor.', timerSeconds: 60, requiresAdult: false, hazard: 'none' },
@@ -64,6 +70,8 @@ const seedRecipes: SeedRecipe[] = [
     difficulty: 'medium',
     totalMinutes: 12,
     requiresAdult: true,
+    ingredients: ['Plátano','Huevo','Avena','Chips de chocolate'],
+    utensils: ['Taza grande','Tenedor','Microondas'],
     steps: [
       { id: 'step-3-1', order: 1, instruction: 'Pisa un plátano en una taza grande.', requiresAdult: false, hazard: 'none' },
       { id: 'step-3-2', order: 2, instruction: 'Agrega huevo y avena, mezcla bien.', timerSeconds: 90, requiresAdult: false, hazard: 'allergen' },
@@ -77,6 +85,8 @@ const seedRecipes: SeedRecipe[] = [
     difficulty: 'easy',
     totalMinutes: 15,
     requiresAdult: false,
+    ingredients: ['Lechuga','Tomate','Limón','Aceite de oliva'],
+    utensils: ['Bowl','Cuchillo','Tabla de picar'],
     steps: [
       { id: 'step-4-1', order: 1, instruction: 'Lava lechuga y tomate.', timerSeconds: 90, requiresAdult: false, hazard: 'none' },
       { id: 'step-4-2', order: 2, instruction: 'Corta verduras en trozos pequeños.', tip: 'Cuidado con cuchillo.', requiresAdult: true, hazard: 'knife' },
@@ -90,6 +100,8 @@ const seedRecipes: SeedRecipe[] = [
     difficulty: 'easy',
     totalMinutes: 8,
     requiresAdult: false,
+    ingredients: ['Yogurt natural','Granola','Fruta picada'],
+    utensils: ['Vaso','Cuchara'],
     steps: [
       { id: 'step-5-1', order: 1, instruction: 'Busca vaso transparente y cuchara.', requiresAdult: false, hazard: 'none' },
       { id: 'step-5-2', order: 2, instruction: 'Pon capa de yogurt.', requiresAdult: false, hazard: 'allergen' },
@@ -142,7 +154,9 @@ async function insertSeedRecipes(container: Container): Promise<void> {
       title: recipe.title,
       difficulty: recipe.difficulty,
       totalMinutes: recipe.totalMinutes,
-      requiresAdult: recipe.requiresAdult
+      requiresAdult: recipe.requiresAdult,
+      ingredients: recipe.ingredients,
+      utensils: recipe.utensils
     });
 
     await recipeStepRepository.saveMany(

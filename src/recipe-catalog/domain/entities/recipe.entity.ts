@@ -7,6 +7,8 @@ export interface RecipePrimitives {
   difficulty: 'easy' | 'medium' | 'hard';
   totalMinutes: number;
   requiresAdult: boolean;
+  ingredients: string[];
+  utensils: string[];
 }
 
 export class Recipe extends AggregateRoot<RecipePrimitives> {
@@ -15,7 +17,9 @@ export class Recipe extends AggregateRoot<RecipePrimitives> {
     title: string,
     difficulty: 'easy' | 'medium' | 'hard',
     totalMinutes: number,
-    requiresAdult: boolean
+    requiresAdult: boolean,
+    ingredients: string[],
+    utensils: string[]
   ): Recipe {
     if (!title.trim()) {
       throw new Error('Recipe title cannot be empty');
@@ -25,7 +29,7 @@ export class Recipe extends AggregateRoot<RecipePrimitives> {
       throw new Error('Recipe total minutes must be greater than zero');
     }
 
-    return new Recipe(id, title, difficulty, totalMinutes, requiresAdult);
+    return new Recipe(id, title, difficulty, totalMinutes, requiresAdult, ingredients, utensils);
   }
 
   public static fromPrimitives(primitives: RecipePrimitives): Recipe {
@@ -34,7 +38,9 @@ export class Recipe extends AggregateRoot<RecipePrimitives> {
       primitives.title,
       primitives.difficulty,
       primitives.totalMinutes,
-      primitives.requiresAdult
+      primitives.requiresAdult,
+      primitives.ingredients,
+      primitives.utensils
     );
   }
 
@@ -43,13 +49,17 @@ export class Recipe extends AggregateRoot<RecipePrimitives> {
   readonly #difficulty: 'easy' | 'medium' | 'hard';
   readonly #totalMinutes: number;
   readonly #requiresAdult: boolean;
+  readonly #ingredients: string[];
+  readonly #utensils: string[];
 
   private constructor(
     id: RecipeId,
     title: string,
     difficulty: 'easy' | 'medium' | 'hard',
     totalMinutes: number,
-    requiresAdult: boolean
+    requiresAdult: boolean,
+    ingredients: string[],
+    utensils: string[]
   ) {
     super();
     this.#id = id;
@@ -57,6 +67,8 @@ export class Recipe extends AggregateRoot<RecipePrimitives> {
     this.#difficulty = difficulty;
     this.#totalMinutes = totalMinutes;
     this.#requiresAdult = requiresAdult;
+    this.#ingredients = ingredients;
+    this.#utensils = utensils;
   }
 
   public get id(): RecipeId {
@@ -85,7 +97,9 @@ export class Recipe extends AggregateRoot<RecipePrimitives> {
       title: this.#title,
       difficulty: this.#difficulty,
       totalMinutes: this.#totalMinutes,
-      requiresAdult: this.#requiresAdult
+      requiresAdult: this.#requiresAdult,
+      ingredients: this.#ingredients,
+      utensils: this.#utensils
     };
   }
 }

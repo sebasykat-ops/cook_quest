@@ -1,10 +1,10 @@
 import { ContainerModule } from 'inversify';
-import { CreateRecipeUseCase } from '../../application/use-cases/create-recipe.use-case';
-import { InMemoryRecipeRepository } from '../repositories/in-memory-recipe.repository';
-import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
-import '../controllers';
+import { CreateRecipeUseCase } from '@recipe-catalog/application/use-cases/create-recipe.use-case';
+import { InMemoryRecipeRepository } from '@recipe-catalog/infrastructure/repositories/in-memory-recipe.repository';
+import recipeCatalogContainerTypes from '@recipe-catalog/infrastructure/container/recipe-catalog.container.types';
+import '@recipe-catalog/infrastructure/controllers';
 
 export const recipeCatalogContainer = new ContainerModule((bind) => {
-  bind(tokens.recipeCatalog.recipeRepository).to(InMemoryRecipeRepository).inSingletonScope();
-  bind(tokens.recipeCatalog.createRecipeUseCase).to(CreateRecipeUseCase).inSingletonScope();
+  bind(recipeCatalogContainerTypes.recipeRepository).to(InMemoryRecipeRepository).inSingletonScope();
+  bind(recipeCatalogContainerTypes.createRecipeUseCase).to(CreateRecipeUseCase).inSingletonScope();
 });

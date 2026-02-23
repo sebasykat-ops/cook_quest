@@ -1,11 +1,23 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { controller, httpGet } from 'inversify-express-utils';
-import { successResponse } from '../http/api-response';
+import { z } from 'zod';
+import { ValidationError } from '@shared/domain/errors/validation-error';
+import { successResponse } from '@shared/infrastructure/http/api-response';
+import getHealthSchema from '@shared/infrastructure/schema/get-health.schema';
 
 @controller('/health')
 export class GetHealthController {
   @httpGet('')
-  public async run(_request: Request, response: Response): Promise<Response> {
-    return response.json(successResponse({ status: 'ok' }));
+  public async run(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      getHealthSchema.parse({ params: request.params, query: request.query });
+      return response.json(successResponse({ status: 'ok' }));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return next(new ValidationError('Invalid health request', error.flatten()));
+      }
+
+      next(error);
+    }
   }
 }

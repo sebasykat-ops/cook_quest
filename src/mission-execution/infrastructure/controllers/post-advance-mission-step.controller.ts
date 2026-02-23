@@ -1,27 +1,30 @@
 import { Request, Response, NextFunction } from 'express';
 import { inject } from 'inversify';
 import { controller, httpPost } from 'inversify-express-utils';
-import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
-import { AdvanceMissionStepUseCase } from '../../application/use-cases/advance-mission-step.use-case';
-import { MissionProgressRepository } from '../../domain/repositories/mission-progress.repository';
-import { successResponse } from '../../../shared-kernel/infrastructure/http/api-response';
-import { NotFoundError } from '../../../shared-kernel/domain/errors/not-found-error';
+import { z } from 'zod';
+import missionExecutionContainerTypes from '@mission-execution/infrastructure/container/mission-execution.container.types';
+import { AdvanceMissionStepUseCase } from '@mission-execution/application/use-cases/advance-mission-step.use-case';
+import { MissionProgressRepository } from '@mission-execution/domain/repositories/mission-progress.repository';
+import postAdvanceMissionStepSchema from '@mission-execution/infrastructure/schema/post-advance-mission-step.schema';
+import { NotFoundError } from '@shared/domain/errors/not-found-error';
+import { ValidationError } from '@shared/domain/errors/validation-error';
+import { successResponse } from '@shared/infrastructure/http/api-response';
 
 @controller('/missions/:missionId/advance-step')
 export class PostAdvanceMissionStepController {
   constructor(
-    @inject(tokens.missionExecution.advanceMissionStepUseCase)
+    @inject(missionExecutionContainerTypes.advanceMissionStepUseCase)
     private readonly advanceMissionStepUseCase: AdvanceMissionStepUseCase,
-    @inject(tokens.missionExecution.missionProgressRepository)
+    @inject(missionExecutionContainerTypes.missionProgressRepository)
     private readonly missionProgressRepository: MissionProgressRepository
   ) {}
 
   @httpPost('')
   public async run(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const missionId = String(request.params.missionId);
-      await this.advanceMissionStepUseCase.execute({ missionId });
-      const missionProgress = await this.missionProgressRepository.findById(missionId);
+      const parsedParams = postAdvanceMissionStepSchema.parse(request.params);
+      await this.advanceMissionStepUseCase.execute({ missionId: parsedParams.missionId });
+      const missionProgress = await this.missionProgressRepository.findById(parsedParams.missionId);
 
       if (!missionProgress) {
         throw new NotFoundError('Mission not found');
@@ -35,6 +38,10 @@ export class PostAdvanceMissionStepController {
         })
       );
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return next(new ValidationError('Invalid mission id', error.flatten()));
+      }
+
       next(error);
     }
   }

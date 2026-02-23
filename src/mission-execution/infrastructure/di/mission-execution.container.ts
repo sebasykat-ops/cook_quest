@@ -1,12 +1,12 @@
 import { ContainerModule } from 'inversify';
-import { AdvanceMissionStepUseCase } from '../../application/use-cases/advance-mission-step.use-case';
-import { InMemoryMissionProgressRepository } from '../repositories/in-memory-mission-progress.repository';
-import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
-import '../controllers';
+import { AdvanceMissionStepUseCase } from '@mission-execution/application/use-cases/advance-mission-step.use-case';
+import { InMemoryMissionProgressRepository } from '@mission-execution/infrastructure/repositories/in-memory-mission-progress.repository';
+import missionExecutionContainerTypes from '@mission-execution/infrastructure/container/mission-execution.container.types';
+import '@mission-execution/infrastructure/controllers';
 
 export const missionExecutionContainer = new ContainerModule((bind) => {
-  bind(tokens.missionExecution.missionProgressRepository)
+  bind(missionExecutionContainerTypes.missionProgressRepository)
     .to(InMemoryMissionProgressRepository)
     .inSingletonScope();
-  bind(tokens.missionExecution.advanceMissionStepUseCase).to(AdvanceMissionStepUseCase).inSingletonScope();
+  bind(missionExecutionContainerTypes.advanceMissionStepUseCase).to(AdvanceMissionStepUseCase).inSingletonScope();
 });

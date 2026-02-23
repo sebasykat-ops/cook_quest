@@ -12,7 +12,25 @@
     "emitDecoratorMetadata": true,
     "types": [
       "node"
-    ]
+    ],
+    "baseUrl": "./src",
+    "paths": {
+      "@shared/*": [
+        "shared-kernel/*"
+      ],
+      "@recipe-catalog/*": [
+        "recipe-catalog/*"
+      ],
+      "@mission-execution/*": [
+        "mission-execution/*"
+      ],
+      "@safety-guidance/*": [
+        "safety-guidance/*"
+      ],
+      "@user-progress/*": [
+        "user-progress/*"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts"

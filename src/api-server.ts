@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
-import { createMainContainer } from './shared-kernel/infrastructure/di/container';
-import { createHttpApp } from './shared-kernel/infrastructure/http/create-http-app';
-import { seedData } from './shared-kernel/infrastructure/seed-data';
+import { createMainContainer } from '@shared/infrastructure/di/container';
+import { createHttpApp } from '@shared/infrastructure/http/create-http-app';
+import { seedData } from '@shared/infrastructure/seed-data';
 
 const port = Number(process.env.PORT ?? 3000);
 

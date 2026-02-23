@@ -16,6 +16,7 @@ Each bounded context contains:
 
 HTTP endpoints are defined inside each context under:
 - `infrastructure/controllers`
+- each endpoint has an input schema under `infrastructure/schema`
 
 Dependency Injection:
 - `inversify` + `inversify-express-utils`
@@ -32,6 +33,17 @@ Controller module index pattern:
 - `recipe-catalog/infrastructure/controllers/index.ts`
 - `mission-execution/infrastructure/controllers/index.ts`
 - `shared-kernel/infrastructure/controllers/index.ts`
+
+Container types per context:
+- `recipe-catalog/infrastructure/container/recipe-catalog.container.types.ts`
+- `mission-execution/infrastructure/container/mission-execution.container.types.ts`
+
+Path aliases:
+- `@shared/*`
+- `@recipe-catalog/*`
+- `@mission-execution/*`
+- `@safety-guidance/*`
+- `@user-progress/*`
 
 ## DDD Rules (strict)
 1. Bounded contexts do not import internals from other contexts.

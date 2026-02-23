@@ -1,20 +1,24 @@
 import { Request, Response, NextFunction } from 'express';
 import { inject } from 'inversify';
 import { controller, httpGet } from 'inversify-express-utils';
-import { RecipeRepository } from '../../domain/repositories/recipe.repository';
-import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
-import { successResponse } from '../../../shared-kernel/infrastructure/http/api-response';
+import { z } from 'zod';
+import recipeCatalogContainerTypes from '@recipe-catalog/infrastructure/container/recipe-catalog.container.types';
+import { RecipeRepository } from '@recipe-catalog/domain/repositories/recipe.repository';
+import getRecipesSchema from '@recipe-catalog/infrastructure/schema/get-recipes.schema';
+import { ValidationError } from '@shared/domain/errors/validation-error';
+import { successResponse } from '@shared/infrastructure/http/api-response';
 
 @controller('/recipes')
 export class GetRecipesController {
   constructor(
-    @inject(tokens.recipeCatalog.recipeRepository)
+    @inject(recipeCatalogContainerTypes.recipeRepository)
     private readonly recipeRepository: RecipeRepository
   ) {}
 
   @httpGet('')
-  public async run(_request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+  public async run(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
+      getRecipesSchema.parse({ query: request.query });
       const recipes = await this.recipeRepository.findAll();
 
       return response.json(
@@ -29,6 +33,10 @@ export class GetRecipesController {
         )
       );
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return next(new ValidationError('Invalid recipes query', error.flatten()));
+      }
+
       next(error);
     }
   }

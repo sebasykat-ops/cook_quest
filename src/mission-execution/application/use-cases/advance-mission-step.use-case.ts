@@ -1,14 +1,14 @@
 import { inject, injectable } from 'inversify';
-import { UseCase } from '../../../shared-kernel/application/use-case';
-import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
-import { MissionProgressRepository } from '../../domain/repositories/mission-progress.repository';
+import { UseCase } from '@shared/application/use-case';
+import { NotFoundError } from '@shared/domain/errors/not-found-error';
+import missionExecutionContainerTypes from '@mission-execution/infrastructure/container/mission-execution.container.types';
+import { MissionProgressRepository } from '@mission-execution/domain/repositories/mission-progress.repository';
 import { AdvanceMissionStepDto } from '../dto/advance-mission-step.dto';
-import { NotFoundError } from '../../../shared-kernel/domain/errors/not-found-error';
 
 @injectable()
 export class AdvanceMissionStepUseCase implements UseCase<AdvanceMissionStepDto, void> {
   constructor(
-    @inject(tokens.missionExecution.missionProgressRepository)
+    @inject(missionExecutionContainerTypes.missionProgressRepository)
     private readonly missionProgressRepository: MissionProgressRepository
   ) {}
 

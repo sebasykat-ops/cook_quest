@@ -1,15 +1,15 @@
 import { inject, injectable } from 'inversify';
-import { UseCase } from '../../../shared-kernel/application/use-case';
-import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
-import { Recipe } from '../../domain/entities/recipe.entity';
-import { RecipeRepository } from '../../domain/repositories/recipe.repository';
-import { RecipeId } from '../../domain/value-objects/recipe-id.value-object';
+import { UseCase } from '@shared/application/use-case';
+import recipeCatalogContainerTypes from '@recipe-catalog/infrastructure/container/recipe-catalog.container.types';
+import { Recipe } from '@recipe-catalog/domain/entities/recipe.entity';
+import { RecipeRepository } from '@recipe-catalog/domain/repositories/recipe.repository';
+import { RecipeId } from '@recipe-catalog/domain/value-objects/recipe-id.value-object';
 import { CreateRecipeDto } from '../dto/create-recipe.dto';
 
 @injectable()
 export class CreateRecipeUseCase implements UseCase<CreateRecipeDto, void> {
   constructor(
-    @inject(tokens.recipeCatalog.recipeRepository)
+    @inject(recipeCatalogContainerTypes.recipeRepository)
     private readonly recipeRepository: RecipeRepository
   ) {}
 

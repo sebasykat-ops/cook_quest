@@ -2,9 +2,9 @@ import 'reflect-metadata';
 
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
-import { createMainContainer } from '../../src/shared-kernel/infrastructure/di/container';
-import { createHttpApp } from '../../src/shared-kernel/infrastructure/http/create-http-app';
-import { seedData } from '../../src/shared-kernel/infrastructure/seed-data';
+import { createMainContainer } from '@shared/infrastructure/container/container';
+import { createHttpApp } from '@shared/infrastructure/http/create-http-app';
+import { seedData } from '@shared/infrastructure/seed-data';
 
 describe('HTTP Endpoints', () => {
   it('returns health response contract', async () => {

@@ -22,11 +22,11 @@ Dependency Injection:
 - `inversify` + `inversify-express-utils`
 - Controllers with decorators (`@controller`, `@httpGet`, `@httpPost`)
 - Context containers:
-  - `recipe-catalog/infrastructure/di/recipe-catalog.container.ts`
-  - `mission-execution/infrastructure/di/mission-execution.container.ts`
-  - `shared-kernel/infrastructure/di/shared-kernel.container.ts`
+  - `recipe-catalog/infrastructure/container/recipe-catalog.container.ts`
+  - `mission-execution/infrastructure/container/mission-execution.container.ts`
+  - `shared-kernel/infrastructure/container/shared-kernel.container.ts`
 - Main container loader:
-  - `shared-kernel/infrastructure/di/container.ts`
+  - `shared-kernel/infrastructure/container/container.ts`
 - Composition root in `api-server.ts`
 
 Controller module index pattern:

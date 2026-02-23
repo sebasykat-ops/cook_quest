@@ -21,11 +21,6 @@ export async function seedData(container: Container): Promise<void> {
   });
 
   await missionProgressRepository.save(
-    MissionProgress.create(MissionId.create('mission-1'), {
-      recipeId: 'recipe-1',
-      currentStep: 1,
-      totalSteps: 5,
-      isCompleted: false
-    })
+    MissionProgress.create(MissionId.create('mission-1'), 'recipe-1', 1, 5, false)
   );
 }

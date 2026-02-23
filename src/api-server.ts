@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { createMainContainer } from '@shared/infrastructure/di/container';
+import { createMainContainer } from '@shared/infrastructure/container/container';
 import { createHttpApp } from '@shared/infrastructure/http/create-http-app';
 import { seedData } from '@shared/infrastructure/seed-data';
 

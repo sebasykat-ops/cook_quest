@@ -14,12 +14,13 @@ export class CreateRecipeUseCase implements UseCase<CreateRecipeDto, void> {
   ) {}
 
   public async execute(request: CreateRecipeDto): Promise<void> {
-    const recipe = Recipe.create(RecipeId.create(request.id), {
-      title: request.title,
-      difficulty: request.difficulty,
-      totalMinutes: request.totalMinutes,
-      requiresAdult: request.requiresAdult
-    });
+    const recipe = Recipe.create(
+      RecipeId.create(request.id),
+      request.title,
+      request.difficulty,
+      request.totalMinutes,
+      request.requiresAdult
+    );
 
     await this.recipeRepository.save(recipe);
   }

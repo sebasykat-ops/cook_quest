@@ -1,7 +1,11 @@
 import { Express, Request, Response } from 'express';
+import { injectable } from 'inversify';
 
-export function registerGetHealthController(app: Express): void {
-  app.get('/health', (_request: Request, response: Response) => {
-    response.json({ status: 'ok' });
-  });
+@injectable()
+export class GetHealthController {
+  public register(app: Express): void {
+    app.get('/health', (_request: Request, response: Response) => {
+      response.json({ status: 'ok' });
+    });
+  }
 }

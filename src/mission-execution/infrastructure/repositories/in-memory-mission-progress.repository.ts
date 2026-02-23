@@ -1,6 +1,8 @@
+import { injectable } from 'inversify';
 import { MissionProgress } from '../../domain/entities/mission-progress.entity';
 import { MissionProgressRepository } from '../../domain/repositories/mission-progress.repository';
 
+@injectable()
 export class InMemoryMissionProgressRepository implements MissionProgressRepository {
   private readonly missionProgressMap = new Map<string, MissionProgress>();
 

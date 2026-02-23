@@ -1,15 +1,26 @@
 import { Express } from 'express';
 import { Container } from 'inversify';
-import { registerGetHealthController } from '../controllers/get-health.controller';
-import { registerGetRecipesController } from '../../../recipe-catalog/infrastructure/controllers/get-recipes.controller';
-import { registerPostRecipesController } from '../../../recipe-catalog/infrastructure/controllers/post-recipes.controller';
-import { registerGetMissionByIdController } from '../../../mission-execution/infrastructure/controllers/get-mission-by-id.controller';
-import { registerPostAdvanceMissionStepController } from '../../../mission-execution/infrastructure/controllers/post-advance-mission-step.controller';
+import { GetMissionByIdController } from '../../../mission-execution/infrastructure/controllers/get-mission-by-id.controller';
+import { PostAdvanceMissionStepController } from '../../../mission-execution/infrastructure/controllers/post-advance-mission-step.controller';
+import { GetRecipesController } from '../../../recipe-catalog/infrastructure/controllers/get-recipes.controller';
+import { PostRecipesController } from '../../../recipe-catalog/infrastructure/controllers/post-recipes.controller';
+import { tokens } from '../di/tokens';
+import { GetHealthController } from '../controllers/get-health.controller';
 
 export function registerHttpRoutes(app: Express, container: Container): void {
-  registerGetHealthController(app);
-  registerGetRecipesController(app, container);
-  registerPostRecipesController(app, container);
-  registerGetMissionByIdController(app, container);
-  registerPostAdvanceMissionStepController(app, container);
+  const getHealthController = container.get<GetHealthController>(tokens.sharedKernel.getHealthController);
+  const getRecipesController = container.get<GetRecipesController>(tokens.recipeCatalog.getRecipesController);
+  const postRecipesController = container.get<PostRecipesController>(tokens.recipeCatalog.postRecipesController);
+  const getMissionByIdController = container.get<GetMissionByIdController>(
+    tokens.missionExecution.getMissionByIdController
+  );
+  const postAdvanceMissionStepController = container.get<PostAdvanceMissionStepController>(
+    tokens.missionExecution.postAdvanceMissionStepController
+  );
+
+  getHealthController.register(app);
+  getRecipesController.register(app);
+  postRecipesController.register(app);
+  getMissionByIdController.register(app);
+  postAdvanceMissionStepController.register(app);
 }

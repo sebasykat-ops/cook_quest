@@ -6,9 +6,9 @@ import { InMemoryMissionProgressRepository } from '../../mission-execution/infra
 import { tokens } from './di/tokens';
 
 export async function seedData(container: Container): Promise<void> {
-  const createRecipeUseCase = container.get<CreateRecipeUseCase>(tokens.createRecipeUseCase);
+  const createRecipeUseCase = container.get<CreateRecipeUseCase>(tokens.recipeCatalog.createRecipeUseCase);
   const missionProgressRepository = container.get<InMemoryMissionProgressRepository>(
-    tokens.missionProgressRepository
+    tokens.missionExecution.missionProgressRepository
   );
 
   await createRecipeUseCase.execute({

@@ -18,8 +18,14 @@ HTTP endpoints are defined inside each context under:
 - `infrastructure/controllers`
 
 Dependency Injection:
-- `inversify` container in `shared-kernel/infrastructure/di`
-- composition root in `api-server.ts`
+- `inversify` across controllers, use cases and repositories.
+- Context containers:
+  - `recipe-catalog/infrastructure/di/recipe-catalog.container.ts`
+  - `mission-execution/infrastructure/di/mission-execution.container.ts`
+  - `shared-kernel/infrastructure/di/shared-kernel.container.ts`
+- Main container loader:
+  - `shared-kernel/infrastructure/di/container.ts`
+- Composition root in `api-server.ts`
 
 ## DDD Rules (strict)
 1. Bounded contexts do not import internals from other contexts.

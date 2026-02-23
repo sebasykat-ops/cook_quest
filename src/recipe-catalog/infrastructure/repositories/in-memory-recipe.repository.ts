@@ -1,6 +1,8 @@
+import { injectable } from 'inversify';
 import { Recipe } from '../../domain/entities/recipe.entity';
 import { RecipeRepository } from '../../domain/repositories/recipe.repository';
 
+@injectable()
 export class InMemoryRecipeRepository implements RecipeRepository {
   private readonly recipes = new Map<string, Recipe>();
 

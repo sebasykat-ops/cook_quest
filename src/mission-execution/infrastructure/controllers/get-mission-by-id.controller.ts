@@ -1,28 +1,33 @@
 import { Express, Request, Response } from 'express';
-import { Container } from 'inversify';
-import { InMemoryMissionProgressRepository } from '../repositories/in-memory-mission-progress.repository';
+import { inject, injectable } from 'inversify';
 import { tokens } from '../../../shared-kernel/infrastructure/di/tokens';
+import { MissionProgressRepository } from '../../domain/repositories/mission-progress.repository';
 
-export function registerGetMissionByIdController(app: Express, container: Container): void {
-  app.get('/missions/:missionId', async (request: Request, response: Response) => {
-    const missionProgressRepository = container.get<InMemoryMissionProgressRepository>(
-      tokens.missionProgressRepository
-    );
-    const missionId = String(request.params.missionId);
-    const missionProgress = await missionProgressRepository.findById(missionId);
+@injectable()
+export class GetMissionByIdController {
+  constructor(
+    @inject(tokens.missionExecution.missionProgressRepository)
+    private readonly missionProgressRepository: MissionProgressRepository
+  ) {}
 
-    if (!missionProgress) {
-      response.status(404).json({ message: 'Mission not found' });
-      return;
-    }
+  public register(app: Express): void {
+    app.get('/missions/:missionId', async (request: Request, response: Response) => {
+      const missionId = String(request.params.missionId);
+      const missionProgress = await this.missionProgressRepository.findById(missionId);
 
-    response.json({
-      data: {
-        missionId: missionProgress.id.value,
-        recipeId: missionProgress.recipeId,
-        currentStep: missionProgress.currentStep,
-        isCompleted: missionProgress.isCompleted
+      if (!missionProgress) {
+        response.status(404).json({ message: 'Mission not found' });
+        return;
       }
+
+      response.json({
+        data: {
+          missionId: missionProgress.id.value,
+          recipeId: missionProgress.recipeId,
+          currentStep: missionProgress.currentStep,
+          isCompleted: missionProgress.isCompleted
+        }
+      });
     });
-  });
+  }
 }

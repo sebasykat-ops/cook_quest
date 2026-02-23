@@ -3,6 +3,7 @@ import { AdvanceMissionStepUseCase } from '@mission-execution/application/use-ca
 import { GetMissionByIdUseCase } from '@mission-execution/application/use-cases/get-mission-by-id.use-case';
 import { InMemoryMissionProgressRepository } from '@mission-execution/infrastructure/repositories/in-memory-mission-progress.repository';
 import missionExecutionContainerTypes from '@mission-execution/infrastructure/container/mission-execution.container.types';
+import { RestartMissionUseCase } from '@mission-execution/application/use-cases/restart-mission.use-case';
 import '@mission-execution/infrastructure/controllers';
 
 export const missionExecutionContainer = new ContainerModule((bind) => {
@@ -11,4 +12,5 @@ export const missionExecutionContainer = new ContainerModule((bind) => {
     .inSingletonScope();
   bind(missionExecutionContainerTypes.advanceMissionStepUseCase).to(AdvanceMissionStepUseCase).inSingletonScope();
   bind(missionExecutionContainerTypes.getMissionByIdUseCase).to(GetMissionByIdUseCase).inSingletonScope();
+  bind(missionExecutionContainerTypes.restartMissionUseCase).to(RestartMissionUseCase).inSingletonScope();
 });

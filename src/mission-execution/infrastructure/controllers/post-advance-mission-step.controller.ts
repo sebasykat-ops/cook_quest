@@ -30,7 +30,8 @@ export class PostAdvanceMissionStepController {
           missionId: missionProgress.id,
           currentStep: missionProgress.currentStep,
           totalSteps: missionProgress.totalSteps,
-          isCompleted: missionProgress.isCompleted
+          isCompleted: missionProgress.isCompleted,
+          completedTimes: missionProgress.completedTimes
         })
       );
     } catch (error) {

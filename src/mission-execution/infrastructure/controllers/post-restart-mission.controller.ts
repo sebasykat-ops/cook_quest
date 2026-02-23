@@ -3,17 +3,17 @@ import { inject } from 'inversify';
 import { controller, httpPost } from 'inversify-express-utils';
 import { z } from 'zod';
 import missionExecutionContainerTypes from '@mission-execution/infrastructure/container/mission-execution.container.types';
-import { AdvanceMissionStepUseCase } from '@mission-execution/application/use-cases/advance-mission-step.use-case';
+import { RestartMissionUseCase } from '@mission-execution/application/use-cases/restart-mission.use-case';
 import { GetMissionByIdUseCase } from '@mission-execution/application/use-cases/get-mission-by-id.use-case';
-import postCompleteMissionStepSchema from '@mission-execution/infrastructure/schema/post-complete-mission-step.schema';
+import postRestartMissionSchema from '@mission-execution/infrastructure/schema/post-restart-mission.schema';
 import { ValidationError } from '@shared/domain/errors/validation-error';
 import { successResponse } from '@shared/infrastructure/http/api-response';
 
-@controller('/missions/:missionId/complete-step')
-export class PostCompleteMissionStepController {
+@controller('/missions/:missionId/restart')
+export class PostRestartMissionController {
   constructor(
-    @inject(missionExecutionContainerTypes.advanceMissionStepUseCase)
-    private readonly advanceMissionStepUseCase: AdvanceMissionStepUseCase,
+    @inject(missionExecutionContainerTypes.restartMissionUseCase)
+    private readonly restartMissionUseCase: RestartMissionUseCase,
     @inject(missionExecutionContainerTypes.getMissionByIdUseCase)
     private readonly getMissionByIdUseCase: GetMissionByIdUseCase
   ) {}
@@ -21,8 +21,8 @@ export class PostCompleteMissionStepController {
   @httpPost('')
   public async run(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const parsedParams = postCompleteMissionStepSchema.parse(request.params);
-      await this.advanceMissionStepUseCase.execute({ missionId: parsedParams.missionId });
+      const parsedParams = postRestartMissionSchema.parse(request.params);
+      await this.restartMissionUseCase.execute({ missionId: parsedParams.missionId });
       const missionProgress = await this.getMissionByIdUseCase.execute({ missionId: parsedParams.missionId });
 
       return response.json(

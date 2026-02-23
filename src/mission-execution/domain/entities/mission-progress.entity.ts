@@ -7,6 +7,7 @@ export interface MissionProgressPrimitives {
   currentStep: number;
   totalSteps: number;
   isCompleted: boolean;
+  completedTimes: number;
 }
 
 export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
@@ -15,13 +16,14 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
     recipeId: string,
     currentStep: number,
     totalSteps: number,
-    isCompleted: boolean
+    isCompleted: boolean,
+    completedTimes = 0
   ): MissionProgress {
     if (totalSteps <= 0) {
       throw new Error('Total steps must be greater than zero');
     }
 
-    return new MissionProgress(id, recipeId, currentStep, totalSteps, isCompleted);
+    return new MissionProgress(id, recipeId, currentStep, totalSteps, isCompleted, completedTimes);
   }
 
   public static fromPrimitives(primitives: MissionProgressPrimitives): MissionProgress {
@@ -30,7 +32,8 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
       primitives.recipeId,
       primitives.currentStep,
       primitives.totalSteps,
-      primitives.isCompleted
+      primitives.isCompleted,
+      primitives.completedTimes
     );
   }
 
@@ -39,14 +42,23 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
   #currentStep: number;
   #totalSteps: number;
   #isCompleted: boolean;
+  #completedTimes: number;
 
-  private constructor(id: MissionId, recipeId: string, currentStep: number, totalSteps: number, isCompleted: boolean) {
+  private constructor(
+    id: MissionId,
+    recipeId: string,
+    currentStep: number,
+    totalSteps: number,
+    isCompleted: boolean,
+    completedTimes: number
+  ) {
     super();
     this.#id = id;
     this.#recipeId = recipeId;
     this.#currentStep = currentStep;
     this.#totalSteps = totalSteps;
     this.#isCompleted = isCompleted;
+    this.#completedTimes = completedTimes;
   }
 
   public advanceStep(): void {
@@ -54,9 +66,15 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
       this.#currentStep += 1;
     }
 
-    if (this.#currentStep >= this.#totalSteps) {
+    if (this.#currentStep >= this.#totalSteps && !this.#isCompleted) {
       this.#isCompleted = true;
+      this.#completedTimes += 1;
     }
+  }
+
+  public restart(): void {
+    this.#currentStep = 1;
+    this.#isCompleted = false;
   }
 
   public get id(): MissionId {
@@ -71,8 +89,16 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
     return this.#currentStep;
   }
 
+  public get totalSteps(): number {
+    return this.#totalSteps;
+  }
+
   public get isCompleted(): boolean {
     return this.#isCompleted;
+  }
+
+  public get completedTimes(): number {
+    return this.#completedTimes;
   }
 
   public override toPrimitives(): MissionProgressPrimitives {
@@ -81,7 +107,8 @@ export class MissionProgress extends AggregateRoot<MissionProgressPrimitives> {
       recipeId: this.#recipeId,
       currentStep: this.#currentStep,
       totalSteps: this.#totalSteps,
-      isCompleted: this.#isCompleted
+      isCompleted: this.#isCompleted,
+      completedTimes: this.#completedTimes
     };
   }
 }
